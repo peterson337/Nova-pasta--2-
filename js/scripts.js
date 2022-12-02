@@ -2,9 +2,11 @@
 const todoForm = document.querySelector("#todo-form");
 const todoInput = document.querySelector("#todo-input");
 const todoList = document.querySelector("#todo-list");
-const editForm = document.querySelector("edit-form");
+const editForm = document.querySelector("#edit-form");
 const editInput = document.querySelector("#edit-input");
 const canceldoneBtn = document.querySelector("#cancel-edit-btn");
+
+let oldInputValue;
 
  // Funções
 const saveTodo = (text) => {
@@ -35,7 +37,16 @@ todo.appendChild(deleteBtn)
 todoList.appendChild(todo);
 
 todoInput.value="";
+todoInput.focus();
+
+};
+
+const toggleForms = () =>{
+    editForm.classList.toggle("hide");
+    todoForm.classList.toggle("hide");
+    todoList.classList.toggle("hide");
 }
+
  // Eventos
 todoForm.addEventListener("submit",(e)=>{
     e.preventDefault();
@@ -50,4 +61,34 @@ todoForm.addEventListener("submit",(e)=>{
         saveTodo(inputValue)    
     }
 });
+
+document.addEventListener("click", (e) => {
+    const targetEl = e.target;
+    const parenteEl = targetEl.closest("div");
+    let todoTitle;
+    if (parenteEl && parenteEl.querySelector("h3")) {
+        todoTitle = parenteEl.querySelector("h3").innerText;
+    }
+    if (targetEl.classList.contains("finish-todo")) {
+    console.log("clicou para finalizar");
+    parenteEl.classList.toggle("done");
+    /*Se colocar o add no lugar do toggle, o botão só servirá para colocar a tarefa como completo. Agora o toggle além de completar a tarefa e deixa a tarefa normal.*/ 
+}
+    if (targetEl.classList.contains("remove-todo")) {
+        parenteEl.remove();
+    }
+    
+    if (targetEl.classList.contains("edit-todo")) {
+        console.log("Editou");
+        toggleForms();
+
+        editInput.value = todoTitle;
+        oldInputValue.value = todoTitle;
+    }
+});
+
+canceldoneBtn.addEventListener("click", (e) =>{
+    e.preventDefault();
+    toggleForms();
+})
 
